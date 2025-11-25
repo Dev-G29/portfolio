@@ -82,9 +82,9 @@ function App() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem('theme');
-    const initialTheme = savedTheme ? savedTheme === 'light' : true;
-    document.documentElement.setAttribute('data-theme', initialTheme ? 'dark' : 'light');
-    return initialTheme;
+    const initialIsDark = savedTheme ? savedTheme === 'dark' : true;
+    document.documentElement.setAttribute('data-theme', initialIsDark ? 'dark' : 'light');
+    return initialIsDark;
   });
   const currentSkill = heroSkills[skillIndex];
   const isSkillComplete = !isDeleting && displayText === currentSkill;
