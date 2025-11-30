@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import './App.css';
-import profilePhoto from './Dev_img.png';
+import profilePhoto from './dev-img2.jpg';
 import { FaLinkedin, FaGithub, FaEnvelope, FaInstagram } from 'react-icons/fa';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import emailjs from '@emailjs/browser';
@@ -42,56 +42,49 @@ const coreSkills = [
 
 const projects = [
   {
-    title: 'DevMarket Analytics',
-    description:
-      'Self-serve analytics suite that surfaces GTM trends for 120+ SaaS teams with realtime dashboards.',
-    tags: ['React', 'Recharts', 'Node API', 'Postgres'],
-    link: 'https://example.com/analytics',
-    impact: '90% reduction in manual reporting time.'
+    title: 'Banking Application',
+    description:'Built a simple backend banking application where users can view their account balances, transaction history, and other account details. Created RESTful APIs for communication between frontend and backend components.',
+      
+    tags: ['Java', 'Spring Boot', 'MySQL', 'Spring Data JPA', 'Git'],
+    link: 'https://github.com/Dev-G29/Banking-Application'
   },
   {
     title: 'PulseOps Design System',
     description:
       'Token-driven system powering web + mobile clients. Shipped 48 composable components in 6 weeks.',
     tags: ['Storybook', 'Styled Components', 'Rollup'],
-    link: 'https://example.com/design-system',
-    impact: 'Brought UI defect rate down by 35%.'
+    link: 'https://example.com/design-system'
   },
   {
     title: 'Creator Paywall Platform',
     description:
       'Subscription infrastructure for high-volume creators with Stripe billing and audience analytics.',
     tags: ['Next.js', 'Stripe', 'Prisma', 'AWS'],
-    link: 'https://example.com/creator',
-    impact: 'Enabled $2.3M ARR within the first quarter.'
+    link: 'https://example.com/creator'
   }
 ];
 
 const experience = [
   {
-    role: 'Lead Frontend Engineer · Atlas Labs',
-    period: '2022 – Present',
+    role: 'Senior Software Engineer (SDE-II) · Persistent Systems',
+    period: '2024 – Present',
     bullets: [
-      'Own the web platform roadmap across growth, onboarding, and core dashboard experiences.',
-      'Scaled component library adoption to 6 squads while maintaining <2% accessibility violations.',
-      'Mentor 4 engineers, introducing RFC rituals and preview env CI that cut review cycles by 40%.'
+      'Java Backend plus a little exposure of Kubernetes and AWS cloud.',
+      
     ]
   },
   {
-    role: 'Senior Product Engineer · Brightside',
-    period: '2019 – 2022',
+    role: 'Software Engineer · Persistent Systems',
+    period: '2022 – 2024',
     bullets: [
-      'Launched personalization engine that lifted retention +18% MoM.',
-      'Drove migration from CRA to Next.js, trimming TTI by 1.4s on average.',
-      'Partnered with design to codify motion + theming guidelines for marketing surfaces.'
+      'Java Backend with a good understanding of Git and Github along with some basic knowledge of ArgoCD tool.',
     ]
   },
   {
-    role: 'Full-stack Engineer · Freelance',
-    period: '2016 – 2019',
+    role: 'Software Engineer Intern · Persistent Systems',
+    period: 'Feb-2022 –- July-2022',
     bullets: [
-      'Delivered 20+ MVPs for early stage startups covering health, fintech, and creator tools.',
-      'Formalized discovery workshops that derisked scope and aligned stakeholders early.'
+      'Got trained on Java, SQL, Junit.',
     ]
   }
 ];
@@ -350,7 +343,7 @@ function App() {
   return (
     <div className={`app-shell ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
       <nav className="nav-bar">
-        <p className="logo">Dev Portfolio</p>
+        <p className="logo">Dev Gangavkar</p>
         <div className="nav-right">
           <ul>
             <li>
@@ -374,12 +367,12 @@ function App() {
 
       <header className="hero">
         <div className="hero-copy">
-          <p className="eyebrow">Product-focused Frontend Engineer</p>
+          <p className="eyebrow">Seasoned Backend Engineer</p>
           <h1>
             Hi, I’m <span>Dev Gangavkar</span>.
           </h1>
           <p className="lede">
-            I craft resilient experiences and I’m skilled in{' '}
+            I’m skilled in{' '}
             <span className={`skill-type ${isSkillComplete ? 'flash' : ''}`}>
               {displayText}
               <span className="skill-caret" aria-hidden="true">
@@ -389,15 +382,16 @@ function App() {
             .
           </p>
           <p className="lede">
-            I partner with design, product, and growth to ship delightful, measurable outcomes. From
-            component systems to analytics-heavy dashboards, I help teams move fast without breaking
-            trust.
+            I am a Java backend developer with a passion for building clean, efficient, and scalable applications.
+            I enjoy turning ideas into functional software and constantly learning new tools and technologies along the way.
+            From APIs to databases, I enjoy tackling challenges that make applications smarter, faster, and more reliable.
+            I’m always exploring new ways to improve my craft and share what I’ve learned along the journey.
           </p>
           <div className="hero-cta">
             <a className="btn primary" href="#contact">
               Contact Me
             </a>
-            <a className="btn ghost" href="https://example.com/resume.pdf" target="_blank" rel="noreferrer">
+            <a className="btn ghost" href="https://drive.google.com/file/d/1lmNO7B3OqQHaADUYfGJYH9B9ChPtxUFX/view?usp=drive_link" target="_blank" rel="noreferrer">
               View Resume
             </a>
           </div>
@@ -455,15 +449,15 @@ function App() {
       <main>
         <section id="projects" className="card-grid">
           <div className="section-heading">
-            <p className="eyebrow">Recent collaborations</p>
-            <h2>Selected Projects</h2>
+            <p className="eyebrow">My work</p>
+            <h2>Personal Projects</h2>
           </div>
           {projects.map((project) => (
             <article key={project.title} className="card scroll-animate">
               <div className="card-header">
                 <h3>{project.title}</h3>
                 <a href={project.link} target="_blank" rel="noreferrer">
-                  View case study →
+                  View on github →
                 </a>
               </div>
               <p>{project.description}</p>
@@ -472,7 +466,6 @@ function App() {
                   <li key={tag}>{tag}</li>
                 ))}
               </ul>
-              <p className="impact">{project.impact}</p>
             </article>
           ))}
         </section>
@@ -501,7 +494,7 @@ function App() {
 
         <section id="skills" className="skills">
           <div className="section-heading">
-            <p className="eyebrow">Toolbox</p>
+            <p className="eyebrow">Tools and Technologies</p>
             <h2 className="core-skills-heading">Core Skills</h2>
           </div>
           <div className="skills-carousel-container">
@@ -537,7 +530,7 @@ function App() {
 
       <section id="contact" className="contact">
         <div className="section-heading">
-          <p className="eyebrow">Let's build something</p>
+          <p className="eyebrow">Let's connect and have fun</p>
           <h2>Contact</h2>
         </div>
         <div className="contact-social-icons">
