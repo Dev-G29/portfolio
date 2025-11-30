@@ -195,8 +195,20 @@ function App() {
       elementsToAnimate.forEach((el) => observer.observe(el));
     }, 100);
 
+    // Fallback: if observer doesn't mark elements animated (race or timing issues),
+    // add the class after a short delay so content is not left hidden.
+    const fallbackTimeout = setTimeout(() => {
+      const all = document.querySelectorAll('.scroll-animate, .section-heading, .contact-form');
+      all.forEach((el) => {
+        if (!el.classList.contains('animate-in')) {
+          el.classList.add('animate-in');
+        }
+      });
+    }, 800);
+
     return () => {
       clearTimeout(timeout);
+      clearTimeout(fallbackTimeout);
       const elementsToAnimate = document.querySelectorAll('.scroll-animate, .section-heading, .contact-form');
       elementsToAnimate.forEach((el) => observer.unobserve(el));
     };

@@ -336,9 +336,9 @@ body {
 
 .card-grid {
   display: grid;
-  /* Use more horizontal space for project tiles so they appear less congested.
-     Larger minimum width will reduce number of columns on wide screens. */
-  grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+    /* Use more horizontal space for project tiles so they appear less congested.
+      Reduced minimum width so cards fit on more viewports (fewer overflow issues). */
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 2.5rem;
   margin-bottom: 2.5rem; /* add breathing room before next section (Experience) */
 }
