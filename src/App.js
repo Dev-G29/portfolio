@@ -639,7 +639,7 @@ function App() {
       <section id="contact" className="contact">
         <div className="section-heading">
           <h2>Contact</h2>
-          <p className="eyebrow">Let's connect and have fun</p>
+          <p className="eyebrow">Let's connect 📞</p>
         </div>
         <div className="contact-social-icons">
           {socialLinks.map((social) => {
