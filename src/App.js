@@ -141,6 +141,7 @@ function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [carouselScroll, setCarouselScroll] = useState(0);
   const carouselRef = useRef(null);
+  const pauseAutoScroll = useRef(false);
   
   const currentSkill = heroSkills[skillIndex];
   const isSkillComplete = !isDeleting && displayText === currentSkill;
@@ -290,6 +291,90 @@ function App() {
       left: clampedScroll,
       behavior: 'smooth'
     });
+  };
+
+  // Auto-scroll skills carousel (right -> left loop)
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+
+    // Build a seamless loop by duplicating the items in DOM (we already render duplicates)
+    // Measure the width of the original set (first N cards)
+    let ivId = null;
+    const speed = 0.5; // pixels per tick (slower)
+
+    const computeFirstSetWidth = () => {
+      const cards = el.querySelectorAll('.skill-card');
+      if (!cards || cards.length === 0) return 0;
+      // original set is the first half
+      const total = cards.length;
+      const half = Math.floor(total / 2) || total;
+      let width = 0;
+      for (let i = 0; i < half; i++) {
+        const c = cards[i];
+        const style = getComputedStyle(c);
+        const mr = parseFloat(style.marginRight || '0');
+        width += c.offsetWidth + mr;
+      }
+      return width;
+    };
+
+    let firstSetWidth = computeFirstSetWidth();
+
+    const handleResize = () => {
+      firstSetWidth = computeFirstSetWidth();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Use a short interval to advance scrollLeft for consistent behavior across environments
+    ivId = setInterval(() => {
+      if (!pauseAutoScroll.current) {
+        el.scrollLeft += speed;
+        if (firstSetWidth > 0 && el.scrollLeft >= firstSetWidth) {
+          el.scrollLeft -= firstSetWidth;
+        }
+      }
+
+      // Focus detection: find card closest to center and mark it
+      try {
+        const cards = el.querySelectorAll('.skill-card');
+        if (cards && cards.length) {
+          const centerX = el.scrollLeft + el.clientWidth / 2;
+          let closest = null;
+          let minDist = Infinity;
+          cards.forEach((c) => {
+            const cardCenter = (c.offsetLeft || 0) + c.offsetWidth / 2;
+            const dist = Math.abs(cardCenter - centerX);
+            if (dist < minDist) {
+              minDist = dist;
+              closest = c;
+            }
+          });
+          cards.forEach((c) => c.classList.remove('in-focus'));
+          if (closest) closest.classList.add('in-focus');
+        }
+      } catch (e) {
+        // ignore layout errors
+      }
+    }, 16); // ~60fps
+
+    // Start from a small offset to ensure smooth initial motion
+    if (el.scrollLeft === 0) el.scrollLeft = 1;
+
+    return () => {
+      if (ivId) clearInterval(ivId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [carouselRef]);
+
+  // Pause / resume handlers for carousel (hover & focus)
+  const handleCarouselPause = () => {
+    pauseAutoScroll.current = true;
+  };
+
+  const handleCarouselResume = () => {
+    pauseAutoScroll.current = false;
   };
 
   const handleInputChange = (e) => {
@@ -461,14 +546,14 @@ function App() {
       <main>
         <section id="projects" className="card-grid">
           <div className="section-heading">
-            <p className="eyebrow">My work</p>
             <h2>Personal Projects</h2>
+            <p className="eyebrow">My work</p>
           </div>
           {projects.map((project) => (
             <article key={project.title} className="card scroll-animate">
               <div className="card-header">
                 <h3>{project.title}</h3>
-                <a href={project.link} target="_blank" rel="noreferrer">
+                <a className="inline-link" href={project.link} target="_blank" rel="noreferrer">
                   View on github →
                 </a>
               </div>
@@ -478,14 +563,17 @@ function App() {
                   <li key={tag}>{tag}</li>
                 ))}
               </ul>
+              <div className="card-overlay">
+                <a className="view-project btn primary" href={project.link} target="_blank" rel="noreferrer">View Project</a>
+              </div>
             </article>
           ))}
         </section>
 
         <section id="experience" className="timeline">
           <div className="section-heading">
-            <p className="eyebrow">Career journey</p>
             <h2>Experience</h2>
+            <p className="eyebrow">Career journey</p>
           </div>
           <div className="timeline-list">
             {experience.map((item) => (
@@ -506,8 +594,8 @@ function App() {
 
         <section id="skills" className="skills">
           <div className="section-heading">
-            <p className="eyebrow">Tools and Technologies</p>
             <h2 className="core-skills-heading">Core Skills</h2>
+            <p className="eyebrow">Tools and Technologies</p>
           </div>
           <div className="skills-carousel-container">
             <button 
@@ -517,9 +605,17 @@ function App() {
             >
               <FaChevronLeft />
             </button>
-            <div className="skills-carousel" ref={carouselRef}>
-              {coreSkills.map((skill, index) => (
-                <div key={skill.name} className="skill-card scroll-animate">
+            <div
+              className="skills-carousel"
+              ref={carouselRef}
+              tabIndex={0}
+              onMouseEnter={handleCarouselPause}
+              onMouseLeave={handleCarouselResume}
+              onFocus={handleCarouselPause}
+              onBlur={handleCarouselResume}
+            >
+              {[...coreSkills, ...coreSkills].map((skill, index) => (
+                <div key={`${skill.name}-${index}`} className="skill-card scroll-animate">
                   <div className="skill-card-content">
                     <div className={`skill-logo ${skill.name.toLowerCase().replace(/\s+/g, '-')}-logo`} data-skill={skill.name.toLowerCase()}>
                       <img src={skill.logo} alt={`${skill.name} logo`} loading="lazy" />
@@ -542,8 +638,8 @@ function App() {
 
       <section id="contact" className="contact">
         <div className="section-heading">
-          <p className="eyebrow">Let's connect and have fun</p>
           <h2>Contact</h2>
+          <p className="eyebrow">Let's connect and have fun</p>
         </div>
         <div className="contact-social-icons">
           {socialLinks.map((social) => {
